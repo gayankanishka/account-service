@@ -1,9 +1,11 @@
 using System;
 using System.Collections.Generic;
 using System.Fabric;
-using System.Linq;
+using System.Fabric.Description;
 using System.Threading;
 using System.Threading.Tasks;
+using Account.Service.Core;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.ServiceFabric.Services.Communication.Runtime;
 using Microsoft.ServiceFabric.Services.Runtime;
 
@@ -14,6 +16,8 @@ namespace Account.Service.Engine
     /// </summary>
     internal sealed class Engine : StatelessService
     {
+        private ServiceProvider _serviceProvider;
+
         public Engine(StatelessServiceContext context)
             : base(context)
         { }
@@ -24,6 +28,22 @@ namespace Account.Service.Engine
         /// <returns>A collection of listeners.</returns>
         protected override IEnumerable<ServiceInstanceListener> CreateServiceInstanceListeners()
         {
+            IServiceCollection serviceCollection = new ServiceCollection();
+
+            ConfigurationSection azureConfigurationSection = FabricRuntime.GetActivationContext()?
+                .GetConfigurationPackageObject("Config")?
+                .Settings.Sections["AzureStorageConfigs"];
+
+            string storageAccountKey = azureConfigurationSection?.Parameters["StorageConnectionString"]?.Value;
+
+            ICloudStorage cloudStorage = new CloudStorage(storageAccountKey);
+
+            serviceCollection
+                .AddSingleton(cloudStorage)
+                .AddScoped<Processor, Processor>();
+
+            _serviceProvider = serviceCollection.BuildServiceProvider();
+
             return new ServiceInstanceListener[0];
         }
 
@@ -33,16 +53,20 @@ namespace Account.Service.Engine
         /// <param name="cancellationToken">Canceled when Service Fabric needs to shut down this service instance.</param>
         protected override async Task RunAsync(CancellationToken cancellationToken)
         {
-            // TODO: Replace the following sample code with your own logic 
-            //       or remove this RunAsync override if it's not needed in your service.
-
-            long iterations = 0;
+            Processor processor = _serviceProvider.GetService<Processor>();
 
             while (true)
             {
-                cancellationToken.ThrowIfCancellationRequested();
+                try
+                {
+                    await processor.ProcessMessages();
+                }
+                catch (Exception)
+                {
+                    // Not throwing in order to run the service infinity
+                }
 
-                ServiceEventSource.Current.ServiceMessage(this.Context, "Working-{0}", ++iterations);
+                cancellationToken.ThrowIfCancellationRequested();
 
                 await Task.Delay(TimeSpan.FromSeconds(1), cancellationToken);
             }
