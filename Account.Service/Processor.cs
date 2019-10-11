@@ -13,7 +13,7 @@ namespace Account.Service
 
         private const int MessageBatchCount = 10;
         private const string QueueName = "accountqueue";
-        private const int MessageRetryCount = 3;
+        private const int MessageRetryCount = 2;
 
         private readonly ICloudStorage _cloudStorage;
 
