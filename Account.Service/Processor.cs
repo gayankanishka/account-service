@@ -11,7 +11,7 @@ namespace Account.Service
     {
         #region Variables
 
-        private const int MessageBatchCount = 10;
+        private const int MessageBatchCount = 20;
         private const string QueueName = "accountqueue";
         private const int MessageRetryCount = 2;
 
