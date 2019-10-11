@@ -4,6 +4,7 @@ using System.Fabric;
 using System.Fabric.Description;
 using System.Threading;
 using System.Threading.Tasks;
+using Account.Service.Business;
 using Account.Service.Core;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.ServiceFabric.Services.Communication.Runtime;
@@ -40,7 +41,8 @@ namespace Account.Service.Engine
 
             serviceCollection
                 .AddSingleton(cloudStorage)
-                .AddScoped<Processor, Processor>();
+                .AddScoped<Processor, Processor>()
+                .AddTransient<IAccountBusiness, AccountBusiness>();
 
             _serviceProvider = serviceCollection.BuildServiceProvider();
 

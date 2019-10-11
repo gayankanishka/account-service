@@ -27,7 +27,7 @@ namespace Account.Service
         /// <param name="cloudStorage">Injected cloud storage account</param>
         public Processor(ICloudStorage cloudStorage)
         {
-            this._cloudStorage = cloudStorage;
+            _cloudStorage = cloudStorage;
         }
 
         #endregion
@@ -52,7 +52,7 @@ namespace Account.Service
         {
             if (cloudQueueMessage.DequeueCount > MessageRetryCount)
             {
-                await _cloudStorage.DeleteQueueMessageAsync(QueueName, cloudQueueMessage);
+                //await _cloudStorage.DeleteQueueMessageAsync(QueueName, cloudQueueMessage);
                 return;
             }
 
