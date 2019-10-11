@@ -12,7 +12,7 @@ namespace Account.Service
         #region Variables
 
         private const int MessageBatchCount = 10;
-        private const string QueueName = "messagesqueue";
+        private const string QueueName = "accountqueue";
         private const int MessageRetryCount = 3;
 
         private readonly ICloudStorage _cloudStorage;
