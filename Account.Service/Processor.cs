@@ -1,7 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Account.Service.Business;
 using Account.Service.Core;
+using Account.Service.Core.Models;
 using Microsoft.Azure.Storage.Queue;
 using Newtonsoft.Json;
 
@@ -16,6 +19,7 @@ namespace Account.Service
         private const int MessageRetryCount = 2;
 
         private readonly ICloudStorage _cloudStorage;
+        private readonly IAccountBusiness _accountBusiness;
 
         #endregion
 
@@ -25,9 +29,10 @@ namespace Account.Service
         /// Constructor of the ingest processor
         /// </summary>
         /// <param name="cloudStorage">Injected cloud storage account</param>
-        public Processor(ICloudStorage cloudStorage)
+        public Processor(ICloudStorage cloudStorage, IAccountBusiness accountBusiness)
         {
             _cloudStorage = cloudStorage;
+            _accountBusiness = accountBusiness;
         }
 
         #endregion
@@ -40,14 +45,21 @@ namespace Account.Service
         /// <returns></returns>
         public async Task ProcessMessages()
         {
-            IEnumerable<CloudQueueMessage> queueMessages = await _cloudStorage.GetQueueMessagesAsync(QueueName, MessageBatchCount);
+            try
+            {
+                IEnumerable<CloudQueueMessage> queueMessages = await _cloudStorage.GetQueueMessagesAsync(QueueName, MessageBatchCount);
 
-            IList<Task> taskList = queueMessages.Select(ProcessMessage).ToList();
+                IList<Task> taskList = queueMessages.Select(ProcessMessage).ToList();
 
-            await Task.WhenAll(taskList);
+                await Task.WhenAll(taskList);
+            }
+            catch (Exception e)
+            {
+                throw;
+            }
         }
 
-        // Process the queue message and sends to the Twilio
+        // Process the queue message and sends to the DB handler
         private async Task ProcessMessage(CloudQueueMessage cloudQueueMessage)
         {
             if (cloudQueueMessage.DequeueCount > MessageRetryCount)
@@ -56,7 +68,9 @@ namespace Account.Service
                 return;
             }
 
-            Models.Account account = await Task.Run(() => JsonConvert.DeserializeObject<Models.Account>(cloudQueueMessage.AsString));
+            AccountDto account = await Task.Run(() => JsonConvert.DeserializeObject<AccountDto>(cloudQueueMessage.AsString));
+
+            await _accountBusiness.RoutOperation(account);
 
             // await _cloudStorage.DeleteQueueMessageAsync(QueueName, cloudQueueMessage);
         }

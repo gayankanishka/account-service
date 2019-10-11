@@ -6,6 +6,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using Account.Service.Business;
 using Account.Service.Core;
+using Account.Service.Core.Models;
+using Account.Service.Data;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.ServiceFabric.Services.Communication.Runtime;
 using Microsoft.ServiceFabric.Services.Runtime;
@@ -38,9 +40,12 @@ namespace Account.Service.Engine
             string storageAccountKey = azureConfigurationSection?.Parameters["StorageConnectionString"]?.Value;
 
             ICloudStorage cloudStorage = new CloudStorage(storageAccountKey);
+            IRepository<AccountDto> accountRepository = 
+                new AccountRepository(@"Server=localhost\SQLEXPRESS;Database=PlayGround;User Id=sa;Password=1qaz2wsx;");
 
             serviceCollection
                 .AddSingleton(cloudStorage)
+                .AddSingleton(accountRepository)
                 .AddScoped<Processor, Processor>()
                 .AddTransient<IAccountBusiness, AccountBusiness>();
 
