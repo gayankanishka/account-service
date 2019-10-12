@@ -20,5 +20,12 @@ variables:
   buildConfiguration: 'Release'
 
 steps:
+- task: DotNetCoreCLI@2
+  displayName: 'DotNetCoreCLI@2 nuget restore'
+  inputs:
+    command: 'restore'
+    feedsToUse: 'select'
+    vstsFeed: 'a7a4824e-8388-4337-a7ee-ae1b4e360446'
+
 - script: dotnet build --configuration $(buildConfiguration)
   displayName: 'dotnet build $(buildConfiguration)'
