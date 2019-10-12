@@ -5,10 +5,10 @@ namespace Account.Service.Core
 {
     public interface IRepository<T> where T : class
     {
-        Task<IEnumerable<T>> GetAll();
-        Task<bool> Add(T entity);
-        Task<T> GetById(int id);
-        Task<bool> Update(T entity);
-        Task<bool> Delete(int id);
+        Task<IEnumerable<T>> SelectAll();
+        Task<bool> InsertSingle(T entity);
+        Task<T> SelectById(T entity);
+        Task<bool> UpdateSingle(T entity);
+        Task<bool> DeleteSingle(T entity);
     }
 }
