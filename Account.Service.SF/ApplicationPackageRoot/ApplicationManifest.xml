@@ -1,8 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<ApplicationManifest xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" ApplicationTypeName="Account.Service.SFType" ApplicationTypeVersion="1.0.0" xmlns="http://schemas.microsoft.com/2011/01/fabric">
+<ApplicationManifest xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" ApplicationTypeName="Account.Service" ApplicationTypeVersion="1.0.0" xmlns="http://schemas.microsoft.com/2011/01/fabric">
   <Parameters>
     <Parameter Name="Account.Service.Engine_InstanceCount" DefaultValue="-1" />
     <Parameter Name="StorageConnectionString" DefaultValue="" />
+    <Parameter Name="DBConnectionString" DefaultValue="" />
   </Parameters>
   <!-- Import the ServiceManifest from the ServicePackage. The ServiceManifestName and ServiceManifestVersion 
        should match the Name and Version attributes of the ServiceManifest element defined in the 
@@ -14,6 +15,9 @@
         <Settings>
           <Section Name="AzureStorageConfigs">
             <Parameter Name="StorageConnectionString" Value="[StorageConnectionString]" />
+          </Section>
+          <Section Name="DataBaseConfigs">
+            <Parameter Name="DBConnectionString" Value="[DBConnectionString]" />
           </Section>
         </Settings>
       </ConfigOverride>
