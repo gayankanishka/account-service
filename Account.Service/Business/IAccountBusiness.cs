@@ -1,5 +1,5 @@
 ﻿using System.Threading.Tasks;
-using Account.Service.Core.Models;
+using Account.Service.Models;
 
 namespace Account.Service.Business
 {

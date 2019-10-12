@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using Account.Service.Core;
 using Account.Service.Core.Enums;
-using Account.Service.Core.Models;
+using Account.Service.Models;
 
 namespace Account.Service.Business
 {
@@ -30,13 +30,16 @@ namespace Account.Service.Business
             switch (account.OperationType)
             {
                 case OperationType.Create:
-                    await _accountRepository.Add(account);
+                    await _accountRepository.InsertSingle(account);
                     break;
                 case OperationType.Update:
+                    await _accountRepository.UpdateSingle(account);
                     break;
                 case OperationType.Delete:
+                    await _accountRepository.DeleteSingle(account);
                     break;
                 case OperationType.Read:
+                    await _accountRepository.SelectById(account);
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
