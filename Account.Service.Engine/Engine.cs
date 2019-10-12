@@ -5,9 +5,10 @@ using System.Fabric.Description;
 using System.Threading;
 using System.Threading.Tasks;
 using Account.Service.Business;
-using Account.Service.Core;
+using Core.AzureStorage;
 using Account.Service.Data;
 using Account.Service.Models;
+using Core.Helpers;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.ServiceFabric.Services.Communication.Runtime;
 using Microsoft.ServiceFabric.Services.Runtime;
@@ -44,7 +45,7 @@ namespace Account.Service.Engine
             string storageAccountKey = azureConfigurationSection?.Parameters["StorageConnectionString"]?.Value;
             string dbConnectionString = dataBaseConfigurationSection?.Parameters["DBConnectionString"]?.Value;
 
-            ICloudStorage cloudStorage = new CloudStorage(storageAccountKey);
+            ICloudQueueStorage cloudStorage = new CloudQueueStorage(storageAccountKey);
             IRepository<AccountDto> accountRepository = new AccountRepository(dbConnectionString);
 
             serviceCollection

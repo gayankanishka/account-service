@@ -1,4 +1,4 @@
-﻿using Account.Service.Core.Enums;
+﻿using Core.Enums;
 
 namespace Account.Service.Models
 {
@@ -7,6 +7,6 @@ namespace Account.Service.Models
         public int Id { get; set; }
         public string Name { get; set; }
         public string Email { get; set; }
-        public OperationType OperationType { get; set; }
+        public DataBaseOperationType OperationType { get; set; }
     }
 }

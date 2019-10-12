@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Account.Service.Core;
-using Account.Service.Core.Enums;
+using Core.Enums;
 using Account.Service.Models;
+using Core.Helpers;
 
 namespace Account.Service.Business
 {
@@ -29,16 +29,16 @@ namespace Account.Service.Business
         {
             switch (account.OperationType)
             {
-                case OperationType.Create:
+                case DataBaseOperationType.Create:
                     await _accountRepository.InsertSingle(account);
                     break;
-                case OperationType.Update:
+                case DataBaseOperationType.Update:
                     await _accountRepository.UpdateSingle(account);
                     break;
-                case OperationType.Delete:
+                case DataBaseOperationType.Delete:
                     await _accountRepository.DeleteSingle(account);
                     break;
-                case OperationType.Read:
+                case DataBaseOperationType.Read:
                     await _accountRepository.SelectById(account);
                     break;
                 default:
