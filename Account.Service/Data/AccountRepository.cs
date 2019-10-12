@@ -39,7 +39,11 @@ namespace Account.Service.Data
         {
             using (IDbConnection connection = CreateDbConnection())
             {
-                int count = await connection.ExecuteAsync(InsertAccount, entity, commandType: CommandType.StoredProcedure);
+                DynamicParameters parameters = new DynamicParameters();
+                parameters.Add("@Name", entity.Name, DbType.String, ParameterDirection.Input);
+                parameters.Add("@Email", entity.Email, DbType.String, ParameterDirection.Input);
+
+                int count = await connection.ExecuteAsync(InsertAccount, parameters, commandType: CommandType.StoredProcedure);
                 return count > 0;
             }
         }
@@ -56,18 +60,27 @@ namespace Account.Service.Data
         {
             using (IDbConnection connection = CreateDbConnection())
             {
-                var result = await connection.QueryAsync<AccountDto>(SelectAccountById, entity, commandType: CommandType.StoredProcedure);
+                DynamicParameters parameters = new DynamicParameters();
+                parameters.Add("@Id", entity.Id, DbType.Int32, ParameterDirection.Input);
+
+                var result = await connection.QueryAsync<AccountDto>(SelectAccountById, parameters, commandType: CommandType.StoredProcedure);
                 return result?.FirstOrDefault();
             }
         }
 
         public async Task<bool> UpdateSingle(AccountDto entity)
         {
-            using (var ts = new TransactionScope())
+            using (var ts = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
             {
                 using (IDbConnection connection = CreateDbConnection())
                 {
-                    int count = await connection.ExecuteAsync(UpdateAccount, entity, commandType: CommandType.StoredProcedure);
+                    DynamicParameters parameters = new DynamicParameters();
+                    parameters.Add("@Id", entity.Id, DbType.Int32, ParameterDirection.Input);
+                    parameters.Add("@Name", entity.Name, DbType.String, ParameterDirection.Input);
+                    parameters.Add("@Email", entity.Email, DbType.String, ParameterDirection.Input);
+
+                    int count = await connection.ExecuteAsync(UpdateAccount, parameters, commandType: CommandType.StoredProcedure)
+                                                .ConfigureAwait(false);
                     ts.Complete();
                     return count > 0;
                 }
@@ -76,11 +89,15 @@ namespace Account.Service.Data
 
         public async Task<bool> DeleteSingle(AccountDto entity)
         {
-            using (var ts = new TransactionScope())
+            using (var ts = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
             {
                 using (IDbConnection connection = CreateDbConnection())
                 {
-                    int count = await connection.ExecuteAsync(DeleteAccount, entity, commandType: CommandType.StoredProcedure);
+                    DynamicParameters parameters = new DynamicParameters();
+                    parameters.Add("@Id", entity.Id, DbType.Int32, ParameterDirection.Input);
+
+                    int count = await connection.ExecuteAsync(DeleteAccount, parameters, commandType: CommandType.StoredProcedure)
+                                                .ConfigureAwait(false);
                     ts.Complete();
                     return count > 0;
                 }
