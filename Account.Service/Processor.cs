@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Account.Service.Business;
 using Account.Service.Core;
-using Account.Service.Core.Models;
+using Account.Service.Models;
 using Microsoft.Azure.Storage.Queue;
 using Newtonsoft.Json;
 
@@ -14,7 +14,7 @@ namespace Account.Service
     {
         #region Variables
 
-        private const int MessageBatchCount = 20;
+        private const int MessageBatchCount = 32;
         private const string QueueName = "accountqueue";
         private const int MessageRetryCount = 2;
 
@@ -53,8 +53,9 @@ namespace Account.Service
 
                 await Task.WhenAll(taskList);
             }
-            catch (Exception e)
+            catch (Exception exception)
             {
+                // TODO: Add error logging
                 throw;
             }
         }
@@ -64,7 +65,7 @@ namespace Account.Service
         {
             if (cloudQueueMessage.DequeueCount > MessageRetryCount)
             {
-                //await _cloudStorage.DeleteQueueMessageAsync(QueueName, cloudQueueMessage);
+                await _cloudStorage.DeleteQueueMessageAsync(QueueName, cloudQueueMessage);
                 return;
             }
 
@@ -72,6 +73,7 @@ namespace Account.Service
 
             await _accountBusiness.RoutOperation(account);
 
+            // TODO: Enable this method once all implementations are done
             // await _cloudStorage.DeleteQueueMessageAsync(QueueName, cloudQueueMessage);
         }
 
