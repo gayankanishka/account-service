@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Account.Service.Business;
-using Account.Service.Core;
+using Core.AzureStorage;
 using Account.Service.Models;
 using Microsoft.Azure.Storage.Queue;
 using Newtonsoft.Json;
@@ -18,7 +18,7 @@ namespace Account.Service
         private const string QueueName = "accountqueue";
         private const int MessageRetryCount = 2;
 
-        private readonly ICloudStorage _cloudStorage;
+        private readonly ICloudQueueStorage _cloudStorage;
         private readonly IAccountBusiness _accountBusiness;
 
         #endregion
@@ -29,7 +29,7 @@ namespace Account.Service
         /// Constructor of the ingest processor
         /// </summary>
         /// <param name="cloudStorage">Injected cloud storage account</param>
-        public Processor(ICloudStorage cloudStorage, IAccountBusiness accountBusiness)
+        public Processor(ICloudQueueStorage cloudStorage, IAccountBusiness accountBusiness)
         {
             _cloudStorage = cloudStorage;
             _accountBusiness = accountBusiness;
