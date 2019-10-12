@@ -1,6 +1,6 @@
 ﻿using Account.Service.Core.Enums;
 
-namespace Account.Service.Core.Models
+namespace Account.Service.Models
 {
     public class AccountDto
     {
