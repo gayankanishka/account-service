@@ -2,6 +2,7 @@
 <Application xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Name="fabric:/Account.Service.SF" xmlns="http://schemas.microsoft.com/2011/01/fabric">
   <Parameters>
     <Parameter Name="Account.Service.Engine_InstanceCount" Value="1" />
+    <Parameter Name="DBConnectionString" Value="Server=localhost\SQLEXPRESS;Database=PlayGround;User Id=sa;Password=1qaz2wsx;" />
     <Parameter Name="StorageConnectionString" Value="UseDevelopmentStorage=true;" />
   </Parameters>
 </Application>

@@ -4,4 +4,7 @@
   <Section Name="AzureStorageConfigs">
     <Parameter Name="StorageConnectionString" Value="" />
   </Section>
+  <Section Name="DataBaseConfigs">
+    <Parameter Name="DBConnectionString" Value="" />
+  </Section>
 </Settings>
