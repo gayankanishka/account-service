@@ -53,7 +53,7 @@ namespace Account.Service
 
                 await Task.WhenAll(taskList);
             }
-            catch (Exception exception)
+            catch (Exception)
             {
                 // TODO: Add error logging
                 throw;
@@ -73,8 +73,7 @@ namespace Account.Service
 
             await _accountBusiness.RoutOperation(account);
 
-            // TODO: Enable this method once all implementations are done
-            // await _cloudStorage.DeleteQueueMessageAsync(QueueName, cloudQueueMessage);
+            await _cloudStorage.DeleteQueueMessageAsync(QueueName, cloudQueueMessage);
         }
 
         #endregion
