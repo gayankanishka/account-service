@@ -38,9 +38,6 @@ namespace Account.Service.Business
                 case DataBaseOperationType.Delete:
                     await _accountRepository.DeleteSingle(account);
                     break;
-                case DataBaseOperationType.Read:
-                    await _accountRepository.SelectById(account);
-                    break;
                 default:
                     throw new ArgumentOutOfRangeException();
             }
