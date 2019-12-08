@@ -11,7 +11,7 @@ GO
 -- =======================================================
 CREATE PROCEDURE Update_Account
 	-- Add the parameters for the stored procedure here
-	@Id As int,
+	@Id As bigint,
 	@Name AS varchar(50),
 	@Email AS varchar(50)
 AS

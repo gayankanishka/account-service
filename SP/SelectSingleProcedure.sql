@@ -10,7 +10,7 @@ GO
 -- Description:	Inserts a AccountDto into Accounts table
 -- =======================================================
 CREATE PROCEDURE Select_Single
-	@Id AS int
+	@Id AS bigint
 AS
 BEGIN
     SELECT * FROM [dbo].[Accounts]
