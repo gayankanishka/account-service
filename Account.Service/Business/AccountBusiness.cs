@@ -36,7 +36,7 @@ namespace Account.Service.Business
                     await _accountRepository.UpdateSingle(account);
                     break;
                 case DataBaseOperationType.Delete:
-                    await _accountRepository.DeleteSingle(account);
+                    await _accountRepository.DeleteSingle(account.Id);
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();

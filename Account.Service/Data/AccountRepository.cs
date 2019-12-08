@@ -56,12 +56,12 @@ namespace Account.Service.Data
             }
         }
 
-        public async Task<AccountDto> SelectById(AccountDto entity)
+        public async Task<AccountDto> SelectById(long id)
         {
             using (IDbConnection connection = CreateDbConnection())
             {
                 DynamicParameters parameters = new DynamicParameters();
-                parameters.Add("@Id", entity.Id, DbType.Int32, ParameterDirection.Input);
+                parameters.Add("@Id", id, DbType.Int32, ParameterDirection.Input);
 
                 var result = await connection.QueryAsync<AccountDto>(SelectAccountById, parameters, commandType: CommandType.StoredProcedure);
                 return result?.FirstOrDefault();
@@ -87,14 +87,14 @@ namespace Account.Service.Data
             }
         }
 
-        public async Task<bool> DeleteSingle(AccountDto entity)
+        public async Task<bool> DeleteSingle(long id)
         {
             using (var ts = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
             {
                 using (IDbConnection connection = CreateDbConnection())
                 {
                     DynamicParameters parameters = new DynamicParameters();
-                    parameters.Add("@Id", entity.Id, DbType.Int32, ParameterDirection.Input);
+                    parameters.Add("@Id", id, DbType.Int32, ParameterDirection.Input);
 
                     int count = await connection.ExecuteAsync(DeleteAccount, parameters, commandType: CommandType.StoredProcedure)
                                                 .ConfigureAwait(false);
